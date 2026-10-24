@@ -1,0 +1,18 @@
+id: nexusflow_pipeline
+namespace: company.supplychain
+description: "Automated pipeline for training the NexusFlow risk prediction model."
+tasks:
+  - id: install_dependencies
+    type: io.kestra.plugin.scripts.python.Commands
+    runner: PROCESS
+    beforeCommands:
+      - pip install -r requirements.txt
+    commands:
+      - python model/train_model.py
+  - id: notify_completion
+    type: io.kestra.plugin.core.log.Log
+    message: "NexusFlow model training pipeline executed successfully!"
+triggers:
+  - id: schedule_weekly
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "0 0 * * 0"
